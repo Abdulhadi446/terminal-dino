@@ -3,7 +3,14 @@
 A small, dependency-free **Chrome Dino game for your terminal**.
 No browser, no network — just Python 3 and the standard library.
 
-![Demo animation](assets/demo.gif)
+![Demo animation](https://raw.githubusercontent.com/Abdulhadi446/terminal-dino/main/assets/demo.gif)
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Abdulhadi446/terminal-dino/main/assets/title.png" width="48%" alt="Title screen" />
+  <img src="https://raw.githubusercontent.com/Abdulhadi446/terminal-dino/main/assets/gameplay-day.png" width="48%" alt="Day gameplay" />
+  <img src="https://raw.githubusercontent.com/Abdulhadi446/terminal-dino/main/assets/gameplay-night.png" width="32%" alt="Night gameplay" />
+</p>
+
 
 ## Highlights
 
@@ -18,7 +25,13 @@ No browser, no network — just Python 3 and the standard library.
 
 ## Installation
 
-### Linux / macOS
+### Linux / macOS (one line)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Abdulhadi446/terminal-dino/main/install.sh | bash
+```
+
+Or clone and install locally:
 
 ```bash
 git clone https://github.com/Abdulhadi446/terminal-dino.git
@@ -41,7 +54,13 @@ Custom prefix:
 The installer also drops a desktop entry in `applications/`, so the game shows up
 in menus (Launch terminal + run `dino`).
 
-### Windows (PowerShell)
+### Windows (PowerShell, one line)
+
+```powershell
+irm https://raw.githubusercontent.com/Abdulhadi446/terminal-dino/main/install.ps1 | iex
+```
+
+Or clone and install locally:
 
 ```powershell
 git clone https://github.com/Abdulhadi446/terminal-dino.git
@@ -95,9 +114,9 @@ chmod +x dino.py
 
 | Title | Day | Night |
 |---|---|---|
-| ![Title screen](assets/title.png) | ![Day gameplay](assets/gameplay-day.png) | ![Night gameplay](assets/gameplay-night.png) |
+| ![Title screen](https://raw.githubusercontent.com/Abdulhadi446/terminal-dino/main/assets/title.png) | ![Day gameplay](https://raw.githubusercontent.com/Abdulhadi446/terminal-dino/main/assets/gameplay-day.png) | ![Night gameplay](https://raw.githubusercontent.com/Abdulhadi446/terminal-dino/main/assets/gameplay-night.png) |
 
-![Game over screen](assets/game-over.png)
+![Game over screen](https://raw.githubusercontent.com/Abdulhadi446/terminal-dino/main/assets/game-over.png)
 
 ## How it works
 
