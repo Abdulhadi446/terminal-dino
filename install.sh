@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 # install.sh - install terminal-dino and make `dino` runnable from any shell
-# Usage: ./install.sh [--user|--system|--prefix DIR] [--keep-source]
+# Usage: ./install.sh [--user|--system|--prefix DIR]
 
 set -euo pipefail
 
-PROG="Terminal Dino"
 REPO_URL="${REPO_URL:-https://raw.githubusercontent.com/Abdulhadi446/terminal-dino/main}"
 
 USER_LEVEL=1
@@ -16,7 +15,7 @@ while (( $# > 0 )); do
     --user|-u) USER_LEVEL=1;;
     --prefix) shift; PREFIX="${1:?--prefix needs a directory}";;
     --help|-h)
-      cat <<'EOF'
+      cat <<'HELP'
 Usage: ./install.sh [--user|--system|--prefix DIR]
 
   --user     install under ~/.local (default)
@@ -24,8 +23,9 @@ Usage: ./install.sh [--user|--system|--prefix DIR]
   --prefix   custom install prefix
 
 After installing, run:  dino
-EOF
-      exit 0;;
+HELP
+      exit 0
+      ;;
     *) echo "unknown argument: $1" >&2; exit 2;;
   esac
   shift
@@ -34,14 +34,12 @@ done
 log() { printf 'install: %s\n' "$*"; }
 fail() { printf 'install: error: %s\n' "$*" >&2; exit 1; }
 
-# ---- find a suitable Python (>= 3.8) ----
 PYTHON_BIN="$(command -v python3 || command -v python || true)"
 [[ -z "$PYTHON_BIN" ]] && fail "python 3 is not installed."
 if ! "$PYTHON_BIN" -c 'import sys; sys.exit(0 if sys.version_info >= (3,8) else 1)'; then
   fail "python 3.8 or newer is required."
 fi
 
-# ---- where is dino.py? ----
 SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 SOURCE_PY=""
 for candidate in "$SCRIPT_DIR/dino.py" "$PWD/dino.py"; do
@@ -60,7 +58,6 @@ if [[ -z "$SOURCE_PY" ]]; then
   SOURCE_PY="$TMP_PY"
 fi
 
-# ---- pick install layout ----
 if [[ -n "$PREFIX" ]]; then
   BASE_DIR="$PREFIX"
   BIN_DIR="$PREFIX/bin"
@@ -83,17 +80,15 @@ APP_DIR="$BASE_DIR/share/terminal-dino"
 mkdir -p "$APP_DIR"
 
 log "installing python entry: $SOURCE_PY -> $BIN_DIR/dino"
-install -m 0755 "$SOURCE_PY" "$BIN_DIR/dino"
-
 install -m 0644 "$SOURCE_PY" "$APP_DIR/dino.py"
 printf '#!/bin/sh\nexec "%s" "%s" "$@"\n' "$PYTHON_BIN" "$APP_DIR/dino.py" > "$BIN_DIR/dino"
 chmod 0755 "$BIN_DIR/dino"
 
-# ---- optional desktop entry (Linux/BSD) ----
+# optional desktop entry (Linux/BSD)
 if [[ -d "$HOME/.local" ]]; then
   DESK_DIR="$HOME/.local/share/applications"
   mkdir -p "$DESK_DIR"
-  cat > "$DESK_DIR/terminal-dino.desktop" <<EOF
+  cat > "$DESK_DIR/terminal-dino.desktop" <<DESKTOP
 [Desktop Entry]
 Type=Application
 Name=Terminal Dino
@@ -101,11 +96,11 @@ Comment=Chrome's offline dinosaur in your terminal
 Exec=$BIN_DIR/dino
 Terminal=true
 Categories=Game;
-EOF
+DESKTOP
   command -v update-desktop-database >/dev/null 2>&1 && update-desktop-database "$DESK_DIR" >/dev/null 2>&1 || true
 fi
 
-# ---- PATH help for user installs ----
+# PATH help for user installs
 case ":$PATH:" in
   *":$BIN_DIR:"*) ;;
   *)
@@ -120,8 +115,7 @@ case ":$PATH:" in
     ;;
 esac
 
-# ---- smoke check ----
-if ! command -v "$BIN_DIR/dino" >/dev/null 2>&1 && [[ ! -x "$BIN_DIR/dino" ]]; then
+if [[ ! -x "$BIN_DIR/dino" ]]; then
   fail "install step did not place dino executable"
 fi
 
@@ -137,8 +131,4 @@ If your shell doesn't find it yet, either restart your shell or run:
 
 EOF
 
-# cleanup temp file if we downloaded
 if [[ -n "${TMP_PY:-}" && -f "${TMP_PY}" ]]; then rm -f "$TMP_PY"; fi
-EOF
-chmod +x install.sh
-echo ready
