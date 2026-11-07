@@ -40,7 +40,10 @@ if ! "$PYTHON_BIN" -c 'import sys; sys.exit(0 if sys.version_info >= (3,8) else 
   fail "python 3.8 or newer is required."
 fi
 
-SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR=""
+if [[ -n "${BASH_SOURCE[0]:-}" ]]; then
+  SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)" || true
+fi
 SOURCE_PY=""
 for candidate in "$SCRIPT_DIR/dino.py" "$PWD/dino.py"; do
   if [[ -f "$candidate" ]]; then SOURCE_PY="$candidate"; break; fi
